@@ -1,0 +1,23 @@
+{% extends "home.html" %}
+
+{% block content %}
+<form action="{% url 'interpolated_frames' %}" method="post">
+    {% csrf_token %}
+    <h2>KeyFrames Generated successfully.</h2>
+    <div class = "grid-container">
+        {% for image in keyframes %}
+            <img src="{{ image }}" alt="Keyframe-{{ forloop.counter }}">
+        {% endfor %}
+    </div>
+    <button type="submit">Generate Interpolated Frames</button>
+</form>
+{% endblock %}
+{% block scripts %}
+<script>
+    const form = document.querySelector('form');
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        form.submit();
+    });
+</script>
+{% endblock %}

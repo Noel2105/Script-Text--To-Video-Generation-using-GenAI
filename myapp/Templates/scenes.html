@@ -1,0 +1,24 @@
+{% extends "home.html" %}
+
+{% block content %}
+<form action="{% url 'key_frames' %}" method="post">
+    {% csrf_token %}
+    <h2>Scenes Generated successfully.</h2>
+<ul>
+{% for scene in scenes %}
+    <li>{{ scene }}</li>
+{% endfor %}
+</ul>
+<button type="submit">Generate KeyFrames</button>
+</form>
+{% endblock %}
+{% block scripts %}
+<script>
+    const form = document.querySelector('form');
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        form.submit();
+    });
+
+</script>
+{% endblock %}

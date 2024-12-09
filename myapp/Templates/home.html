@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scene to Video Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 1rem 0;
+        }
+        main {
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        form {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            margin-bottom: 2rem;
+        }
+        form textarea {
+            width: 100%;
+            height: 150px;
+            margin-bottom: 1rem;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            resize: vertical;
+        }
+        button {
+            display: inline-block;
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .error {
+            color: red;
+            font-size: 14px;
+            margin-bottom: 1rem;
+        }
+        .progress-log {
+            width: 100%;
+            max-width: 600px;
+            margin: 1rem 0;
+            padding: 1rem;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        ul, div {
+            width: 100%;
+            max-width: 600px;
+            margin-top: 1rem;
+        }
+        img {
+            max-width: 100%;
+            margin: 0.5rem 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        video {
+            width: 512px;
+            height: 512px;
+            margin-top: 1rem;
+            border-radius: 10px;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px; /* space between grid items */
+          }
+        
+        .grid-container img {
+        width: 100%;
+        height: auto; /* maintain aspect ratio */
+        object-fit: cover; /* crop the image to fit */
+        border-radius: 5px; /* optional for rounded corners */
+        }
+          
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Scene to Video Generator</h1>
+        <p>Transform your script into an AI-generated video!</p>
+    </header>
+    <main>
+        {% if error %}
+            <h2>{{error}}</h2>
+            <button id="new_script">Try Again</button>
+            <br>
+        {% else %}
+            {% block content %}
+            <form method="POST" action="{% url 'home' %}">
+                {% csrf_token %}
+                <label for="script">Enter Your Script:</label>
+                <textarea id="script" name="script" placeholder="Type your script here..." required></textarea>
+                <button type="submit">Generate Video</button>
+            </form>
+            <!-- <div class="progress-log" id="log"></div>
+            <ul id="scenes-list"></ul>
+            <div id="keyframes-container"></div>
+            <div id="interpolated-message"></div>
+            <div id="final-video-container"></div> -->
+            {% endblock %}
+        {% endif %}
+        </main>
+        {% block scripts %}
+        <script>
+            const new_script = document.getElementById("new_script");
+            let  redirectUrl = "{% url 'home' %}";
+            new_script.addEventListener("click", function(e) {
+                window.location.replace(redirectUrl);
+            });
+        </script>
+        {% endblock %}
+
+    <!-- <script>
+        const socket = new WebSocket('ws://localhost:8000/ws/progress/');
+
+        socket.onmessage = function(event) {
+            const data = JSON.parse(event.data);
+            const log = document.getElementById('log');
+
+            // Append progress message to the log
+            const message = document.createElement('p');
+            message.textContent = data.message;
+            log.appendChild(message);
+
+            // Update scenes
+            if (data.scenes) {
+                const scenesList = document.getElementById('scenes-list');
+                data.scenes.forEach(scene => {
+                    const li = document.createElement('li');
+                    li.textContent = scene;
+                    scenesList.appendChild(li);
+                });
+            }
+
+            // Update keyframe images
+            if (data.images) {
+                const keyframesContainer = document.getElementById('keyframes-container');
+                data.images.forEach(image => {
+                    const img = document.createElement('img');
+                    img.src = image;
+                    img.alt = `Keyframe`;
+                    keyframesContainer.appendChild(img);
+                });
+            }
+
+            // Display interpolated frames message
+            if (data.interpolated_dir) {
+                const interpolatedMessage = document.getElementById('interpolated-message');
+                interpolatedMessage.textContent = "Interpolated frames generated successfully.";
+            }
+
+            // Display final video
+            if (data.video_path) {
+                const videoContainer = document.getElementById('final-video-container');
+                const video = document.createElement('video');
+                video.src = data.video_path;
+                video.controls = true;
+                videoContainer.appendChild(video);
+            }
+        };
+
+        socket.onerror = function(error) {
+            console.error('WebSocket error:', error);
+        };
+    </script> -->
+</body>
+</html>

@@ -1,0 +1,19 @@
+{% extends "home.html" %}
+
+{% block content %}
+<video controls>
+    <source src = {{ video_url }} type="video/mp4">
+    Your browser does not support the video tag.
+</video>
+<button id = "new_script">Try New Script</button>
+{% endblock %}
+{% block scripts %}
+<script>
+    const new_script = document.getElementById("new_script");
+    let  redirectUrl = "{% url 'home' %}";
+    new_script.addEventListener("click", function(e) {
+        e.preventDefault();
+        window.location.replace(redirectUrl);
+    });
+</script>
+{% endblock %}
