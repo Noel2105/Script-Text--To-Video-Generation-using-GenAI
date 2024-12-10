@@ -9,7 +9,7 @@ from myproject.settings import MEDIA_ROOT,MEDIA_URL,BASE_DIR
 
 
 # Hugging Face API settings
-HF_API_TOKEN = "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"
+HF_API_TOKEN = "Your_hugging_face_token"
 HEADERS = {"Authorization": f"Bearer {HF_API_TOKEN}"}
 
 context = {}
